@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-md-8">
+    <p>
+      <label>Pagination:
+        <label>Page #:
+          <input type="text" [(ngModel)]="page" size="2">
+        </label>
+        <label>Page Size:
+          <input type="text" [(ngModel)]="size" size="2">
+        </label>
+      </label>
+      <button (click)="requestWordsReactive()">Reactive Request</button>
+      <button (click)="requestWordsBlocking()">Blocking Request</button>
+    </p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Word</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let word of wordArray" [class.success]="word === selectedWord" (click)="onSelect(word)">
+          <td>{{word.id}}</td>
+          <td>{{word.value}}</td>
+        <tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-4">
+    <div class="message">Click on a word for more details</div>
+    <app-word-detail [word]="selectedWord"></app-word-detail>
+  </div>
+</div>
