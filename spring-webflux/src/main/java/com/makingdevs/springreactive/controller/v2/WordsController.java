@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @RestController("WordsControllerV2")
-@RequestMapping("api/v2/users")
+@RequestMapping("api/v2/words")
 @RequiredArgsConstructor
 public class WordsController {
 
-  private final IWordService userService;
+  private final IWordService wordService;
 
   @GetMapping(value = "", produces = "text/event-stream")
   public Flux<Word> findAllReactive(Pageable pageable) {
-    return userService.findAllReactive(pageable);
+    return wordService.findAllReactive(pageable);
   }
 
 }

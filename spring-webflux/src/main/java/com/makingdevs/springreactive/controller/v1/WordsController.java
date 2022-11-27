@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController("WordsControllerV1")
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v1/words")
 @RequiredArgsConstructor
 public class WordsController {
 
-  private final IWordService userService;
+  private final IWordService wordService;
 
   @GetMapping
   public List<Word> findAllBlocking(Pageable pageable) throws Exception {
-    return userService.findAllBlocking(pageable);
+    return wordService.findAllBlocking(pageable);
   }
 
 }
