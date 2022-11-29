@@ -27,13 +27,16 @@ To start your server:
 * Install dependencies with `npm install`
 * Start angular app with `ng serve`
 
-Now you can visit `http://localhost:4200/words` from your browser.
+Now you can visit http://localhost:4200/words from your browser.
 
 ## JMeter
 
-You can view the test results by opening the `spring-reactive.jmx` file with JMeter in GUI mode.
+You can view the test results
+with `./jmeter.sh -n -t "spring-reactive.jmx" -l "spring-reactive.csv" -e -o "./spring-reactive-results`
+or executing `spring-reactive.jmx` with **JMeter in GUI mode**.
 
 ## Learn more
+
 * Docker command-line reference: https://docs.docker.com/compose/reference/
 * JMeter: https://jmeter.apache.org/usermanual/get-started.html
 * Web on Reactive Stack: https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html
