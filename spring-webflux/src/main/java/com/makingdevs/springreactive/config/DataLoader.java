@@ -16,8 +16,10 @@ import reactor.core.publisher.Mono;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -29,25 +31,35 @@ public class DataLoader implements ApplicationRunner {
   private Resource resource;
 
   @Override
-  public void run(final ApplicationArguments args) throws IOException {
+  public void run(final ApplicationArguments args) {
     Mono<Long> monoCount = wordReactiveRepository.count();
     Long count = monoCount.block();
 
     if (!ObjectUtils.isEmpty(count) && count.equals(0L)) {
-      Supplier<String> uuid = getUuidSupplier();
+      Flux
+        .fromStream(mapAllWords())
+        .onErrorResume(Mono::error)
+        .delayElements(Duration.ofMillis(1))
+        .flatMap(wordReactiveRepository::save)
+        .subscribe(w -> log.info("New word loaded: {}", w));
+    }
+  }
 
+  private Stream<Word> mapAllWords() {
+    Stream<Word> streamWord = Stream.empty();
+
+    try {
       BufferedReader bufferedReader = new BufferedReader(
         new InputStreamReader(resource.getInputStream())
       );
-
-      Flux
-        .fromStream(
-          bufferedReader.lines().map(word -> wordReactiveRepository.save(new Word(uuid.get(), word)))
-        )
-        .subscribe(w -> log.info("New word loaded: {}", w.block()));
-
-      log.info("Repository contains now {} entries.", wordReactiveRepository.count().block());
+      streamWord = bufferedReader
+        .lines()
+        .map(word -> new Word(getUuidSupplier().get(), word));
+    } catch (IOException ex) {
+      log.error("Error reading word file {}", ex.getMessage());
     }
+
+    return streamWord;
   }
 
   private Supplier<String> getUuidSupplier() {
