@@ -23,13 +23,13 @@ public class WordService implements IWordService {
   private final WordBlockingRepository wordBlockingRepository;
 
   public Flux<Word> findAllReactive(Pageable pageable) {
-    log.info("Find all words reactive");
+    log.info("Find all words - reactive");
     return wordReactiveRepository.findAllByIdNotNull(pageable)
       .delayElements(Duration.ofMillis(Constants.ONE_HUNDRED));
   }
 
   public List<Word> findAllBlocking(Pageable pageable) throws Exception {
-    log.info("Find all words blocking");
+    log.info("Find all words - blocking");
     Thread.sleep((long) Constants.ONE_HUNDRED * pageable.getPageSize());
     return wordBlockingRepository.findAllByIdNotNull(pageable);
   }

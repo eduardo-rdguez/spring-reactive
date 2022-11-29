@@ -46,6 +46,7 @@ public class DataLoader implements ApplicationRunner {
   }
 
   private Stream<Word> mapAllWords() {
+    Supplier<String> uuidSupplier = getUuidSupplier();
     Stream<Word> streamWord = Stream.empty();
 
     try {
@@ -54,7 +55,7 @@ public class DataLoader implements ApplicationRunner {
       );
       streamWord = bufferedReader
         .lines()
-        .map(word -> new Word(getUuidSupplier().get(), word));
+        .map(word -> new Word(uuidSupplier.get(), word));
     } catch (IOException ex) {
       log.error("Error reading word file {}", ex.getMessage());
     }
